@@ -21,9 +21,11 @@ export class AddUpdateComponent  implements OnInit {
   })
 
   firebaseSvc = inject(FirebaseService);
-  utilsSvc = inject(UtilsService)
+  utilsSvc = inject(UtilsService);
+  user = {} as User;
 
   ngOnInit() {
+    this.user = this.utilsSvc.getFromLocalStorage('user');
   }
 
   //-----> Tomar/Seleccionar una imagen <----
@@ -34,6 +36,8 @@ export class AddUpdateComponent  implements OnInit {
 
  async submit(){
     if (this.form.valid) {
+
+      let path = `user`
 
       const loading = await this.utilsSvc.loading();
       await loading.present();
