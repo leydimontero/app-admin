@@ -3,6 +3,8 @@ import { Product } from 'src/app/models/product.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddUpdateComponent } from 'src/app/shared/components/add-update/add-update.component';
+import { orderBy, where } from 'firebase/firestore';
+
 
 @Component({
   selector: 'app-home',
@@ -27,6 +29,19 @@ export class HomePage implements OnInit {
     this.getProdcuts();
   }
 
+  // === refresca la pagina  =======
+  doRefresh(event) {
+    setTimeout(() => {
+      this.getProdcuts()
+      event.target.complete();
+    }, 1000);
+  }
+
+  // ---------------> Obtener las Ganancias <-----------------
+  getProfits() {
+    return this.products.reduce((index, product) => index + product.price * product.soldUnits, 0)
+  }
+
   // ----> Obtener productos <-----
 
   getProdcuts(){
@@ -34,7 +49,12 @@ export class HomePage implements OnInit {
 
     this.loading = true
 
-    let sub =  this.firebaseSvc.getColletcionData(path).subscribe({
+    let query = [
+      orderBy('soldUnits', 'desc'),
+      // where('soldUnits', '>', 30) ---> Consulta compuesta ( trae las unidades vendidas mayores a 30)
+
+    ]
+    let sub =  this.firebaseSvc.getColletcionData(path, query).subscribe({
       next: (res: any) => {
         console.log(res);
         this.products = res

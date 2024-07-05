@@ -26,7 +26,7 @@ export class AuthGuard  {
           if(auth){
             if (user) resolve(true)
           }else{
-            this.utilsSvc.routerLink('/auth');
+            this.firebaseSvc.signOut()
             resolve(false)
           }
 

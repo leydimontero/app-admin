@@ -47,6 +47,13 @@ export class AddUpdateComponent  implements OnInit {
     }
 
    }
+   // ===================> convierte valores de tipo string a number <==================
+   serNumberInputs() {
+    let { soldUnits, price } = this.form.controls;
+
+    if(soldUnits.value) soldUnits.setValue(parseFloat(soldUnits.value))
+    if(price.value) price.setValue(parseFloat(price.value))
+   }
 // -----> Crear Producto <------------
  async createProduct(){
 
