@@ -1,7 +1,7 @@
-import { InvokeFunctionExpr } from '@angular/compiler';
+
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
+import { AlertController, AlertOptions, LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 
@@ -14,6 +14,7 @@ export class UtilsService {
   toastCtrl = inject(ToastController)
   modalCtrl = inject(ModalController)
   router = inject(Router)
+  alertCrtl = inject(AlertController)
 
 
 
@@ -29,6 +30,14 @@ export class UtilsService {
   });
 
 };
+
+
+//==================> Alert <==============0
+async presentAlert(opts?: AlertOptions) {
+  const alert = await this.alertCrtl.create(opts);
+
+  await alert.present();
+}
 
 
  // ----> Loading <----

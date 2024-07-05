@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { getFirestore, setDoc, doc, getDoc, addDoc, collection } from '@angular/fire/firestore'
+import { getFirestore, setDoc, doc, getDoc, addDoc, collection, collectionData, query, updateDoc, deleteDoc } from '@angular/fire/firestore'
 
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail} from 'firebase/auth'
 import { User } from '../models/user.model';
 import { UtilsService } from './utils.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { getStorage, uploadString, ref, getDownloadURL } from '@firebase/storage';
+import { getStorage, uploadString, ref, getDownloadURL, deleteObject } from '@firebase/storage';
 
 
 @Injectable({
@@ -21,6 +21,8 @@ export class FirebaseService {
   utilSvc = inject(UtilsService)
 
  //======================== AUTENTICACIÓN ===================
+
+
 
  getAuth() {
   return getAuth();
@@ -61,11 +63,28 @@ export class FirebaseService {
 
   }
 
-  //----> Base de Datos <------
+  //==========================> BASE DE DATOS  <=============================
+
+// ------> Obtener documentos de la coleccion <-----------------
+ getColletcionData(path: string, collectionQuery?: any) {
+  const ref = collection(getFirestore(), path);
+  return collectionData(query(ref, collectionQuery), { idField: 'id'})
+ }
+
 
   // ----> setear un documaneto <-------
   setDocument(path: string, data: any) {
     return setDoc(doc(getFirestore(), path), data)
+  }
+
+   // ----> Actualizar un documaneto <-------
+  updateDocument(path: string, data: any) {
+    return updateDoc(doc(getFirestore(), path), data)
+  }
+
+  //-----> Eliminar documento <----------
+  deleteDocument(path: string) {
+    return deleteDoc(doc(getFirestore(), path))
   }
 
   //---> Obtener un documento <---
@@ -87,5 +106,16 @@ export class FirebaseService {
     return uploadString(ref(getStorage(), path), data_url, 'data_url').then(() => {
       return getDownloadURL(ref(getStorage(), path))
     })
+  }
+
+
+  //------> Obtener ruta de la imagen con su URL <---------
+  async getFilePath(url: string) {
+    return ref(getStorage(), url).fullPath
+  }
+
+  //-----> Eliminar Archivo <----------
+  deteleFile(path: string) {
+    return deleteObject(ref(getStorage(), path))
   }
 }
