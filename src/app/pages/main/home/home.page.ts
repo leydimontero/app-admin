@@ -4,6 +4,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddUpdateComponent } from 'src/app/shared/components/add-update/add-update.component';
 import { orderBy, where } from 'firebase/firestore';
+import { User } from 'src/app/models/user.model';
 
 
 @Component({
@@ -22,9 +23,10 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
-  user() {
+  user(): User {
     return this.utilsSvc.getFromLocalStorage('user')
   }
+
   ionViewWillEnter() {
     this.getProdcuts();
   }
